@@ -7,6 +7,8 @@ import org.example.mseventmanager.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class EventService {
     @Autowired
@@ -25,5 +27,13 @@ public class EventService {
             event.setUf(address.getUf());
         }
         return eventRepository.save(event);
+    }
+
+    public Event getEventById(String id) {
+        return eventRepository.findById(id).get();
+    }
+
+    public List<Event> getAllEvents() {
+        return eventRepository.findAll();
     }
 }

@@ -5,10 +5,9 @@ import org.example.mseventmanager.services.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/events")
@@ -23,4 +22,18 @@ public class EventController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedEvent);
     }
 
+    @GetMapping("/get-event/{id}")
+    public Event getEventById(@PathVariable String id) {
+        return eventService.getEventById(id);
+    }
+
+    @GetMapping("/get-all-events")
+    public ResponseEntity<List<Event>> getAllEvents() {
+        List<Event> events = eventService.getAllEvents();
+        return ResponseEntity.status(HttpStatus.OK).body(events);
+    }
 }
+
+
+
+
