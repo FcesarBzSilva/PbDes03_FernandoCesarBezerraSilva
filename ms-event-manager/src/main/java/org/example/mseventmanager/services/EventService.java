@@ -7,6 +7,7 @@ import org.example.mseventmanager.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -35,5 +36,11 @@ public class EventService {
 
     public List<Event> getAllEvents() {
         return eventRepository.findAll();
+    }
+
+    public List<Event> getAllEventsSorted() {
+        List<Event> events = eventRepository.findAll();
+        events.sort(Comparator.comparing(Event::getEventName));
+        return events;
     }
 }
