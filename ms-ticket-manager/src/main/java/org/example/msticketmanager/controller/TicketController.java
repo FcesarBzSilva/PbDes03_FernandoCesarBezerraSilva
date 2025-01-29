@@ -23,8 +23,9 @@ public class TicketController {
     }
 
     @GetMapping("/get-ticket/{id}")
-    public Ticket getEventById(@PathVariable String id) {
-        return ticketService.getTicketById(id);
+    public ResponseEntity<Ticket> getEventById(@PathVariable String id) {
+        Ticket ticket = ticketService.getTicketById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(ticket);
     }
 
     

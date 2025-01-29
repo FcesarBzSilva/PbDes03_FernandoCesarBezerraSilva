@@ -46,6 +46,4 @@ public class TicketService {
         return ticketRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Event not found for ID: " + id));
     }
-
-
-    }
+}
