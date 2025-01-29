@@ -1,5 +1,6 @@
 package org.example.msticketmanager.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.example.msticketmanager.dto.TicketDTO;
 import org.example.msticketmanager.models.Ticket;
 import org.example.msticketmanager.services.TicketService;
@@ -18,7 +19,7 @@ public class TicketController {
     private TicketService ticketService;
 
     @PostMapping("/create-ticket")
-    public ResponseEntity<TicketDTO> createTicket(@RequestBody Ticket ticket) {
+    public ResponseEntity<TicketDTO> createTicket(@RequestBody Ticket ticket) throws JsonProcessingException {
         TicketDTO savedTicket = ticketService.createTicket(ticket);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedTicket);
     }

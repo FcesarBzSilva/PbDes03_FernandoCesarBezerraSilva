@@ -1,10 +1,9 @@
 package org.example.msticketmanager.config;
 
+import org.springframework.amqp.core.Queue;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.Queue;
 
 @Configuration
 public class MqConfig {
@@ -12,7 +11,7 @@ public class MqConfig {
     private String queueName;
 
     @Bean
-    public Queue queueTicketPublish(){
+    public Queue queueTicket() {
         return new Queue(queueName, true);
     }
 }

@@ -1,9 +1,12 @@
 package org.example.msticketmanager.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.example.msticketmanager.clients.EventResourceClient;
 import org.example.msticketmanager.dto.EventDTO;
 import org.example.msticketmanager.dto.TicketDTO;
+import org.example.msticketmanager.infra.mqueue.TicketMqPublisher;
 import org.example.msticketmanager.models.Ticket;
+import org.example.msticketmanager.models.TicketDataMq;
 import org.example.msticketmanager.repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,14 +21,24 @@ public class TicketService {
     @Autowired
     private EventResourceClient eventResourceClient;
 
+    @Autowired
+    private TicketMqPublisher ticketMqPublisher;
+
     @Transactional
-    public TicketDTO createTicket(Ticket ticket) {
+    public TicketDTO createTicket(Ticket ticket) throws JsonProcessingException {
         EventDTO event = eventResourceClient.getEventById(ticket.getEventId());
 
         if (event == null) {
             throw new IllegalArgumentException("Event does not exist!");
         }
+
+        TicketDataMq ticketDataMq = new TicketDataMq(ticket.getCustomerName(),
+                ticket.getCustomerEmail(), ticket.getCpf());
+
+        ticketMqPublisher.publishTicketNotification(ticketDataMq);
+
         Ticket savedTicket = ticketRepository.save(ticket);
+
         return new TicketDTO(event, savedTicket);
     }
 }
