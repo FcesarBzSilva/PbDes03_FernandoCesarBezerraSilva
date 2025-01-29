@@ -41,4 +41,11 @@ public class TicketService {
 
         return new TicketDTO(event, savedTicket);
     }
-}
+
+    public Ticket getTicketById(String id) {
+        return ticketRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Event not found for ID: " + id));
+    }
+
+
+    }
