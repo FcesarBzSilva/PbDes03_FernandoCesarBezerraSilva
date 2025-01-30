@@ -1,5 +1,6 @@
 package org.example.mseventmanager.controller;
 
+import org.example.mseventmanager.exceptions.EventNotFoundException;
 import org.example.mseventmanager.models.Event;
 import org.example.mseventmanager.services.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ public class EventController {
 
     @GetMapping("/get-event/{id}")
     public Event getEventById(@PathVariable String id) {
+
         return eventService.getEventById(id);
     }
 
@@ -37,6 +39,18 @@ public class EventController {
     public ResponseEntity<List<Event>> getAllEventsSorted() {
         List<Event> events = eventService.getAllEventsSorted();
         return ResponseEntity.status(HttpStatus.OK).body(events);
+    }
+
+    @DeleteMapping("/events/{id}")
+    public ResponseEntity<String> deleteEvent(@PathVariable String id) {
+        try {
+            eventService.deleteEventById(id);
+            return new ResponseEntity<>("Event deleted successfully.", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+        } catch (EventNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @PutMapping("/update-event/{id}")
