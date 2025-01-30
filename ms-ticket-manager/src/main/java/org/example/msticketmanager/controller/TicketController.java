@@ -37,5 +37,11 @@ public class TicketController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+
+    @DeleteMapping("/cancel-ticket/{id}")
+    public ResponseEntity<Void> deleteTicket(@PathVariable String id) {
+        ticketService.softDeleteTicket(id);
+        return ResponseEntity.noContent().build();
+    }
     
 }

@@ -37,6 +37,8 @@ public class TicketService {
 
         ticketMqPublisher.publishTicketNotification(ticketDataMq);
 
+        ticket.setStatus("Complete");
+
         Ticket savedTicket = ticketRepository.save(ticket);
 
         return new TicketDTO(event, savedTicket);
@@ -44,6 +46,7 @@ public class TicketService {
 
     public Ticket getTicketById(String id) {
         return ticketRepository.findById(id)
+                .filter(u -> !u.getStatus().equals("Canceled"))
                 .orElseThrow(() -> new RuntimeException("Event not found for ID: " + id));
     }
 
@@ -53,5 +56,11 @@ public class TicketService {
         existingTicket.setCustomerEmail(updatedTicket.getCustomerEmail());
         existingTicket.setCpf(updatedTicket.getCpf());
         return ticketRepository.save(existingTicket);
+    }
+
+    public Ticket softDeleteTicket(String id) {
+        Ticket ticket = getTicketById(id);
+        ticket.setStatus("Canceled");
+        return ticketRepository.save(ticket);
     }
 }
