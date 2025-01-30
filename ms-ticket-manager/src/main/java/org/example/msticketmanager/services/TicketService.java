@@ -46,4 +46,12 @@ public class TicketService {
         return ticketRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Event not found for ID: " + id));
     }
+
+    public Ticket updateTicket(String id, Ticket updatedTicket) {
+        Ticket existingTicket = getTicketById(id);
+        existingTicket.setCustomerName(updatedTicket.getCustomerName());
+        existingTicket.setCustomerEmail(updatedTicket.getCustomerEmail());
+        existingTicket.setCpf(updatedTicket.getCpf());
+        return ticketRepository.save(existingTicket);
+    }
 }
