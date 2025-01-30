@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping(value = "/tickets")
 public class TicketController {
@@ -43,5 +45,10 @@ public class TicketController {
         ticketService.softDeleteTicket(id);
         return ResponseEntity.noContent().build();
     }
-    
+
+    @GetMapping("/check-tickets-by-event/{eventId}")
+    public ResponseEntity<List<Ticket>> checkTicketsByEvent(@PathVariable("eventId") String eventId) {
+        List<Ticket> tickets = ticketService.getTicketsByEventId(eventId);
+        return ResponseEntity.ok(tickets);
+    }
 }

@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class TicketService {
 
@@ -62,5 +64,9 @@ public class TicketService {
         Ticket ticket = getTicketById(id);
         ticket.setStatus("Canceled");
         return ticketRepository.save(ticket);
+    }
+
+    public List<Ticket> getTicketsByEventId(String eventId) {
+        return ticketRepository.findByEventId(eventId);
     }
 }
