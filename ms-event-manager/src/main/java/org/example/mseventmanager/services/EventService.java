@@ -51,4 +51,12 @@ public class EventService {
         events.sort(Comparator.comparing(Event::getEventName));
         return events;
     }
+
+    public Event updateEvent(String id, Event updatedEvent) {
+        Event existingEvent = eventRepository.findById(id)
+                .orElseThrow(() -> new EventNotFoundException("Event not found for ID: " + id));
+        existingEvent.setEventName(updatedEvent.getEventName());
+        existingEvent.setDateTime(updatedEvent.getDateTime());
+        return eventRepository.save(existingEvent);
+    }
 }

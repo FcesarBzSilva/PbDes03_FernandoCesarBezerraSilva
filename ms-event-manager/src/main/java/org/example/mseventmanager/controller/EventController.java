@@ -38,6 +38,16 @@ public class EventController {
         List<Event> events = eventService.getAllEventsSorted();
         return ResponseEntity.status(HttpStatus.OK).body(events);
     }
+
+    @PutMapping("/update-event/{id}")
+    public ResponseEntity<Event> updateEvent(@PathVariable String id, @RequestBody Event updatedEvent) {
+        Event event = eventService.updateEvent(id, updatedEvent);
+        if (event != null) {
+            return ResponseEntity.ok(event);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
 }
 
 
