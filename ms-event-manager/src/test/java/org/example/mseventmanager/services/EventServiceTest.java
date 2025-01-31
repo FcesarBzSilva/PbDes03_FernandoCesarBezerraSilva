@@ -143,4 +143,23 @@ public class EventServiceTest {
 
         verify(eventRepository, never()).delete(any(Event.class));
     }
+
+    @Test
+    void updateEvent_ShouldUpdateEvent_WhenEventExists() {
+        Event existingEvent = new Event();
+        existingEvent.setId("event123");
+        existingEvent.setEventName("Old Event");
+
+        Event updatedEvent = new Event();
+        updatedEvent.setEventName("Updated Event");
+
+        when(eventRepository.findById("event123")).thenReturn(Optional.of(existingEvent));
+        when(eventRepository.save(any(Event.class))).thenReturn(existingEvent);
+
+        Event result = eventService.updateEvent("event123", updatedEvent);
+
+        assertNotNull(result);
+        assertEquals("Updated Event", result.getEventName());
+        verify(eventRepository, times(1)).save(existingEvent);
+    }
 }
