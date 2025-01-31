@@ -3,7 +3,9 @@ package org.example.mseventmanager.services;
 
 import org.example.mseventmanager.clients.TicketServiceClient;
 import org.example.mseventmanager.clients.ViaCepClient;
+import org.example.mseventmanager.dto.TicketDTO;
 import org.example.mseventmanager.exceptions.EventNotFoundException;
+import org.example.mseventmanager.exceptions.EventSoldTicketsException;
 import org.example.mseventmanager.exceptions.InvalidCepException;
 import org.example.mseventmanager.exceptions.InvalidEventException;
 import org.example.mseventmanager.models.Address;
@@ -19,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -125,5 +128,19 @@ public class EventServiceTest {
         eventService.deleteEventById("event123");
 
         verify(eventRepository, times(1)).delete(event);
+    }
+
+    @Test
+    void deleteEventById_ShouldThrowException_WhenTicketsAreSold() {
+        List<TicketDTO> tickets = new ArrayList<>();
+        tickets.add(new TicketDTO());
+
+        when(ticketServiceClient.getTicketsByEventId("event123")).thenReturn(tickets);
+
+        assertThrows(EventSoldTicketsException.class, () -> {
+            eventService.deleteEventById("event123");
+        });
+
+        verify(eventRepository, never()).delete(any(Event.class));
     }
 }
