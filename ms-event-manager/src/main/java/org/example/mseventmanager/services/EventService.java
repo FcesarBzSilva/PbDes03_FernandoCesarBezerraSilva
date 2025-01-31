@@ -4,6 +4,7 @@ import org.example.mseventmanager.clients.TicketServiceClient;
 import org.example.mseventmanager.clients.ViaCepClient;
 import org.example.mseventmanager.dto.TicketDTO;
 import org.example.mseventmanager.exceptions.EventNotFoundException;
+import org.example.mseventmanager.exceptions.EventSoldTicketsException;
 import org.example.mseventmanager.exceptions.InvalidCepException;
 import org.example.mseventmanager.exceptions.InvalidEventException;
 import org.example.mseventmanager.models.Address;
@@ -60,7 +61,7 @@ public class EventService {
     public void deleteEventById(String id) {
         List<TicketDTO> tickets = ticketServiceClient.getTicketsByEventId(id);
         if (!tickets.isEmpty()) {
-            throw new IllegalArgumentException("Event has sold tickets, cannot be deleted.");
+            throw new EventSoldTicketsException("Event has sold tickets, cannot be deleted.");
         }
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new EventNotFoundException("Event not found for ID: " + id));

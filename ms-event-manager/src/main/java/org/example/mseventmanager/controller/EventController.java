@@ -41,7 +41,7 @@ public class EventController {
         return ResponseEntity.status(HttpStatus.OK).body(events);
     }
 
-    @DeleteMapping("/events/{id}")
+    @DeleteMapping("/delete-event/{id}")
     public ResponseEntity<String> deleteEvent(@PathVariable String id) {
         try {
             eventService.deleteEventById(id);
