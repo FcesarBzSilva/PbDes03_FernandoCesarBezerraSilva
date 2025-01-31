@@ -3,6 +3,7 @@ package org.example.mseventmanager.services;
 
 import org.example.mseventmanager.clients.TicketServiceClient;
 import org.example.mseventmanager.clients.ViaCepClient;
+import org.example.mseventmanager.exceptions.InvalidCepException;
 import org.example.mseventmanager.exceptions.InvalidEventException;
 import org.example.mseventmanager.models.Address;
 import org.example.mseventmanager.models.Event;
@@ -69,6 +70,18 @@ public class EventServiceTest {
         event.setCep("12345-678");
 
         assertThrows(InvalidEventException.class, () -> {
+            eventService.addEvent(event);
+        });
+
+        verify(eventRepository, never()).save(any(Event.class));
+    }
+
+    @Test
+    void addEvent_ShouldThrowException_WhenCepIsInvalid() {
+        Event event = new Event();
+        event.setEventName("Sample Event");
+
+        assertThrows(InvalidCepException.class, () -> {
             eventService.addEvent(event);
         });
 
