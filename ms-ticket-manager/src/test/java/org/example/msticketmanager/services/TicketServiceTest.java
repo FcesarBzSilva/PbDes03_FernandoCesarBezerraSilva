@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.example.msticketmanager.clients.EventResourceClient;
 import org.example.msticketmanager.dto.EventDTO;
 import org.example.msticketmanager.dto.TicketDTO;
+import org.example.msticketmanager.exceptions.TicketNotFoundException;
 import org.example.msticketmanager.infra.mqueue.TicketMqPublisher;
 import org.example.msticketmanager.models.Ticket;
 import org.example.msticketmanager.models.TicketDataMq;
@@ -15,6 +16,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -56,6 +59,15 @@ public class TicketServiceTest {
         assertNotNull(result);
         verify(ticketMqPublisher, times(1)).publishTicketNotification(any(TicketDataMq.class));
         verify(ticketRepository, times(1)).save(ticket);
+    }
+
+    @Test
+    void getTicketById_ShouldThrowException_WhenTicketDoesNotExist() {
+        when(ticketRepository.findById("ticket123")).thenReturn(Optional.empty());
+
+        assertThrows(TicketNotFoundException.class, () -> {
+            ticketService.getTicketById("ticket123");
+        });
     }
 }
 
