@@ -162,4 +162,18 @@ public class EventServiceTest {
         assertEquals("Updated Event", result.getEventName());
         verify(eventRepository, times(1)).save(existingEvent);
     }
+
+    @Test
+    void updateEvent_ShouldThrowException_WhenEventDoesNotExist() {
+        Event updatedEvent = new Event();
+        updatedEvent.setEventName("Updated Event");
+
+        when(eventRepository.findById("event123")).thenReturn(Optional.empty());
+
+        assertThrows(EventNotFoundException.class, () -> {
+            eventService.updateEvent("event123", updatedEvent);
+        });
+
+        verify(eventRepository, never()).save(any(Event.class));
+    }
 }
