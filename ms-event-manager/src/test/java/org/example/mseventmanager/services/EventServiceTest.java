@@ -17,6 +17,8 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -86,5 +88,18 @@ public class EventServiceTest {
         });
 
         verify(eventRepository, never()).save(any(Event.class));
+    }
+
+    @Test
+    void getEventById_ShouldReturnEvent_WhenEventExists() {
+        Event event = new Event();
+        event.setId("event123");
+
+        when(eventRepository.findById("event123")).thenReturn(Optional.of(event));
+
+        Event result = eventService.getEventById("event123");
+
+        assertNotNull(result);
+        assertEquals("event123", result.getId());
     }
 }
