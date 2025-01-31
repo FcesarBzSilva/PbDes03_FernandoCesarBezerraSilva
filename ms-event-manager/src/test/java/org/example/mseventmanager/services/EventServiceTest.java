@@ -3,6 +3,7 @@ package org.example.mseventmanager.services;
 
 import org.example.mseventmanager.clients.TicketServiceClient;
 import org.example.mseventmanager.clients.ViaCepClient;
+import org.example.mseventmanager.exceptions.EventNotFoundException;
 import org.example.mseventmanager.exceptions.InvalidCepException;
 import org.example.mseventmanager.exceptions.InvalidEventException;
 import org.example.mseventmanager.models.Address;
@@ -101,5 +102,14 @@ public class EventServiceTest {
 
         assertNotNull(result);
         assertEquals("event123", result.getId());
+    }
+
+    @Test
+    void getEventById_ShouldThrowException_WhenEventDoesNotExist() {
+        when(eventRepository.findById("event123")).thenReturn(Optional.empty());
+
+        assertThrows(EventNotFoundException.class, () -> {
+            eventService.getEventById("event123");
+        });
     }
 }
