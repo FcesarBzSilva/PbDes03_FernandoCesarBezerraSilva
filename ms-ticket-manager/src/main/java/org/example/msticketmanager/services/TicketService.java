@@ -67,6 +67,6 @@ public class TicketService {
     }
 
     public List<Ticket> getTicketsByEventId(String eventId) {
-        return ticketRepository.findByEventId(eventId);
+        return ticketRepository.findByEventIdAndStatus(eventId, "Complete");
     }
 }
