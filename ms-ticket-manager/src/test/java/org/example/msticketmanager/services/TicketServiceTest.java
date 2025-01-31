@@ -88,6 +88,22 @@ public class TicketServiceTest {
         assertEquals("New Customer", result.getCustomerName());
         verify(ticketRepository, times(1)).save(existingTicket);
     }
+
+    @Test
+    void softDeleteTicket_ShouldSoftDeleteTicket_WhenTicketExists() {
+        Ticket ticket = new Ticket();
+        ticket.setTicketId("ticket123");
+        ticket.setStatus("Complete");
+
+        when(ticketRepository.findById("ticket123")).thenReturn(Optional.of(ticket));
+        when(ticketRepository.save(any(Ticket.class))).thenReturn(ticket);
+
+        Ticket result = ticketService.softDeleteTicket("ticket123");
+
+        assertNotNull(result);
+        assertEquals("Canceled", result.getStatus());
+        verify(ticketRepository, times(1)).save(ticket);
+    }
 }
 
 
