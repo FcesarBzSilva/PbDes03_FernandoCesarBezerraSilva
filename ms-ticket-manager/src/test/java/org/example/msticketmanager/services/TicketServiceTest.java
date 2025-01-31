@@ -69,6 +69,25 @@ public class TicketServiceTest {
             ticketService.getTicketById("ticket123");
         });
     }
+
+    @Test
+    void updateTicket_ShouldUpdateTicket_WhenTicketExists() {
+        Ticket existingTicket = new Ticket();
+        existingTicket.setTicketId("ticket123");
+        existingTicket.setStatus("Complete");
+
+        Ticket updatedTicket = new Ticket();
+        updatedTicket.setCustomerName("New Customer");
+
+        when(ticketRepository.findById("ticket123")).thenReturn(Optional.of(existingTicket));
+        when(ticketRepository.save(any(Ticket.class))).thenReturn(existingTicket);
+
+        Ticket result = ticketService.updateTicket("ticket123", updatedTicket);
+
+        assertNotNull(result);
+        assertEquals("New Customer", result.getCustomerName());
+        verify(ticketRepository, times(1)).save(existingTicket);
+    }
 }
 
 
