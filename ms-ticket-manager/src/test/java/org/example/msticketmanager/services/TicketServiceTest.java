@@ -104,6 +104,20 @@ public class TicketServiceTest {
         assertEquals("Canceled", result.getStatus());
         verify(ticketRepository, times(1)).save(ticket);
     }
+
+    @Test
+    void getTicketById_ShouldReturnTicket_WhenTicketExists() {
+        Ticket ticket = new Ticket();
+        ticket.setTicketId("ticket123");
+        ticket.setStatus("Complete");
+
+        when(ticketRepository.findById("ticket123")).thenReturn(Optional.of(ticket));
+
+        Ticket result = ticketService.getTicketById("ticket123");
+
+        assertNotNull(result);
+        assertEquals("ticket123", result.getTicketId());
+    }
 }
 
 
