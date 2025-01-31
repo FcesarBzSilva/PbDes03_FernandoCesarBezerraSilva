@@ -18,6 +18,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -111,5 +112,18 @@ public class EventServiceTest {
         assertThrows(EventNotFoundException.class, () -> {
             eventService.getEventById("event123");
         });
+    }
+
+    @Test
+    void deleteEventById_ShouldDeleteEvent_WhenNoTicketsSold() {
+        Event event = new Event();
+        event.setId("event123");
+
+        when(ticketServiceClient.getTicketsByEventId("event123")).thenReturn(new ArrayList<>());
+        when(eventRepository.findById("event123")).thenReturn(Optional.of(event));
+
+        eventService.deleteEventById("event123");
+
+        verify(eventRepository, times(1)).delete(event);
     }
 }
